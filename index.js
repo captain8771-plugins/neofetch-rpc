@@ -106,7 +106,8 @@ module.exports = class NeofetchRPC extends Plugin {
                 pid: 10,
                 activity: enable ? {
                     details: this.get_prop(this.settings.get("displayed_keys1")),
-                    state: this.get_prop(this.settings.get("displayed_keys2")),
+                    state: this.get_prop(this.settings.get("displayed_keys2")) === "none" 
+                        ? undefined : this.get_prop(this.settings.get("displayed_keys2")),
                     timestamps: undefined,
                     assets: {
                         large_image: this.image(),

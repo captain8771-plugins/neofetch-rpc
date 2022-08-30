@@ -40,7 +40,7 @@ module.exports = class Settings extends React.PureComponent {
                 </SelectInput>
 
                     <SelectInput
-                        options={neofetch(true).map(stuff => ({
+                        options={[{name: "None", value: "none"}, ...neofetch(true)].map(stuff => ({
                             label: stuff[0],
                             value: stuff[0]
                         }))}
