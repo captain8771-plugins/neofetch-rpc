@@ -4,7 +4,7 @@ Feeds neofetch data into your discord rich presence!
 
 ## Install
 
-[Click here for ~~1000$~~ the install](captain8771-plugins/neofetch-rpc)
+[Click here for ~~1000$~~ the install](https://replugged.dev/install?url=captain8771-plugins/neofetch-rpc)
 
 
 ## Note
