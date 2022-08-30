@@ -121,7 +121,8 @@ module.exports = class NeofetchRPC extends Plugin {
     }
 
     rpc(enable=true) {
-        const nf = this.neofetch()
+        const nf = enable ? this.neofetch() : undefined // i dont know why i added this here 
+        // but i dont trust myself to not break the plugin
         this.setRpc(nf, enable)
     }
 

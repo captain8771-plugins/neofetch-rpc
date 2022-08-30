@@ -23,6 +23,13 @@ module.exports = class Settings extends React.PureComponent {
                     opened={this.state.main}
                     onChange={() => this.setState({main: !this.state.main})}
                     >
+                <TextInput
+                        defaultValue={getSetting("rpc-name", "Neofetch")}
+                        required={true}
+                        disabled={false}
+                        onChange={val => {updateSetting("rpc-name", val);reloadRPC()}}
+                        note="The title of the rich presence"
+                    >Rich Presence Title</TextInput>
                 <SelectInput
                     options={neofetch(true).map(stuff => ({
                         label: stuff[0],
