@@ -72,8 +72,7 @@ module.exports = class NeofetchRPC extends Plugin {
         }
         const nf = this.neofetch()
         const a = nf.filter((obj) => obj.name === key)[0]
-        console.log(key, a)
-        return a ? `${a.name}: ${a.value}` : undefined
+        return a !== undefined ? `${a.name}: ${a.value}` : `${key}: undefined`
     }
 
     neofetch(arr) {
