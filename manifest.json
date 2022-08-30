@@ -1,6 +1,6 @@
 {
   "name": "neofetch-rpc",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A plugin to set your rich presence to neofetch output!",
   "author": "Captain#3175 (347366054806159360)",
   "license": "GPLv3"
