@@ -1,5 +1,5 @@
 const { React, getModule } = require("powercord/webpack")
-const { settings: { TextInput, Category, SelectInput }, Divider, FormNotice } = require("powercord/components")
+const { settings: { TextInput, Category, SelectInput, SwitchItem }, Divider, FormNotice } = require("powercord/components")
 
 
 module.exports = class Settings extends React.PureComponent {
@@ -13,7 +13,7 @@ module.exports = class Settings extends React.PureComponent {
     }
 
     render() {
-        const { getSetting, updateSetting, toggleSetting, neofetch, reloadRPC } = this.props
+        const { getSetting, updateSetting, toggleSetting, neofetch, reloadRPC, toggleDisable } = this.props
 
         return (
             <div>
@@ -31,7 +31,7 @@ module.exports = class Settings extends React.PureComponent {
                         note="The title of the rich presence"
                     >Rich Presence Title</TextInput>
                 <SelectInput
-                    options={neofetch(true).map(stuff => ({
+                    options={[{name: "None", value: "none"}, ...neofetch(true)].map(stuff => ({
                         label: stuff[0],
                         value: stuff[0]
                     }))}
@@ -61,6 +61,14 @@ module.exports = class Settings extends React.PureComponent {
                     >
                         Displayed item 2
                     </SelectInput>
+
+                <SwitchItem
+                    value={getSetting("disableIfOtherActivity", false)}
+                    onChange={() => {toggleSetting("disableIfOtherActivity");toggleDisable(getSetting("disableIfOtherActivity", false))}}
+                    description="If the rich presence should be disabled if other rich presences are detected"
+                    >
+                        Disable if other activity
+                </SwitchItem>
 
                 </Category>
 

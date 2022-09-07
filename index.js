@@ -3,6 +3,8 @@ const { Plugin } = require('powercord/entities')
 const { getModule, React } = require('powercord/webpack')
 const { exec } = require('child_process')
 const { matchNeofetchValues } = require("./util")
+const { getActivities } = getModule(['isMobileOnline'], false)
+const { getCurrentUser } = getModule(['getCurrentUser'], false)
 
 const Settings = require("./components/Settings.jsx")
 
@@ -12,6 +14,8 @@ const { getAssets } = getModule(['getAssets'], false);
 
 module.exports = class NeofetchRPC extends Plugin {
     startPlugin() {
+        this.active = false
+        this.interval = setInterval(this.disableIfOtherActivity.bind(this), 5000)
         this._output = ""
         // this.settings.set("setup", false) // TODO: remember to remove
         this.log(this.settings.get("displayed_keys1"))
@@ -22,6 +26,7 @@ module.exports = class NeofetchRPC extends Plugin {
             this.settings.set("command", "neofetch")
             this.settings.set("setup", true)
             this.settings.set("img", [])
+            this.settings.set("disableIfOtherActivity", false)
             this.settings.set("app_id", "972908263769247865")  // if you want to use a custom app_id, set this one
         }
 
@@ -32,6 +37,7 @@ module.exports = class NeofetchRPC extends Plugin {
                 React.createElement(Settings, {
                     neofetch: this.neofetch.bind(this), // so we can access the neofetch function
                     reloadRPC: this.rpc.bind(this),
+                    toggleDisable: this.toggleTogglingRPC.bind(this),
                     ...props
                 })
         })
@@ -40,6 +46,29 @@ module.exports = class NeofetchRPC extends Plugin {
         setTimeout(this.rpc.bind(this), 5000)
 
 
+    }
+
+    toggleTogglingRPC(enable) {
+        // incase this gets called with enable twice in a row for whatever reason
+        // clearInterval(this.disableIfOtherActivity.bind(this))
+        // if (enable) {
+        //     setInterval(this.disableIfOtherActivity.bind(this), 5000)
+        // } else {
+        //     clearInterval(this.disableIfOtherActivity.bind(this))
+        //     this.rpc(true)
+        // }
+    }
+
+    disableIfOtherActivity() {
+        if (!this.settings.get("disableIfOtherActivity")) return
+        const activities = getActivities(getCurrentUser().id)
+        for (let act of activities) {
+            if (act.name !== "Custom Status" && act.name != this.settings.get("rpc-name")) {
+                this.rpc(false)
+                return
+            }
+        }
+        this.rpc(true)
     }
 
     getImages() {
@@ -124,11 +153,13 @@ module.exports = class NeofetchRPC extends Plugin {
         const nf = enable ? this.neofetch() : undefined // i dont know why i added this here 
         // but i dont trust myself to not break the plugin
         this.setRpc(nf, enable)
+        this.active = enable
     }
 
     pluginWillUnload() {
         powercord.api.settings.unregisterSettings(this.entityID)
         this.rpc(false)
+        clearInterval(this.interval)
     }
 
 
